@@ -7,7 +7,7 @@ import {
   setLastFocusedWindowId
 } from 'libs'
 
-const getURL = ({ url }) => new window.URL(url)
+const getURL = ({ url }) => new URL(url)
 
 const reloadTab = (tab) => chrome.tabs.reload(tab.id)
 

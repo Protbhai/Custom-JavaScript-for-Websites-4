@@ -1,8 +1,7 @@
-# DEPRECATED
+# Custom JavaScript for websites (Manifest v3)
 
-**There is no way to provide the same experience in latest Chrome. The extension won't be updated to manifest v3. More details in https://github.com/xcv58/Custom-JavaScript-for-Websites-2/issues/868**
-
-# Custom JavaScript for websites
+This repository now targets **Chrome extension manifest v3**. All original
+features are preserved while using the latest extension format.
 
 [![CircleCI](https://circleci.com/gh/xcv58/Custom-JavaScript-for-Websites-2.svg?style=svg)](https://circleci.com/gh/xcv58/Custom-JavaScript-for-Websites-2)
 [![Build Status](https://travis-ci.org/xcv58/Custom-JavaScript-for-Websites-2.svg?branch=master)](https://travis-ci.org/xcv58/Custom-JavaScript-for-Websites-2)

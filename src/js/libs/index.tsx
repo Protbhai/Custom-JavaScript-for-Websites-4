@@ -37,7 +37,7 @@ export const encodeSource = (script) => {
   // base64 may be smaller, but does not handle unicode characters
   // attempt base64 first, fall back to escaped text
   try {
-    return BASE64_PREFIX + window.btoa(script)
+    return BASE64_PREFIX + globalThis.btoa(script)
   } catch (e) {
     return UTF8_PREFIX + encodeURIComponent(script)
   }
@@ -45,7 +45,7 @@ export const encodeSource = (script) => {
 
 export const decodeSource = (source) => {
   if (source.startsWith(BASE64_PREFIX)) {
-    return window.atob(source.replace(BASE64_PREFIX, ''))
+    return globalThis.atob(source.replace(BASE64_PREFIX, ''))
   }
   if (source.startsWith(UTF8_PREFIX)) {
     return decodeURIComponent(source.replace(UTF8_PREFIX, ''))
@@ -64,7 +64,11 @@ export const getHosts = async (key = '') => {
   if (!key) {
     return []
   }
-  const { hosts = [] } = JSON.parse(window.localStorage.getItem(key) || '{}')
+  let raw = '{}'
+  if (typeof localStorage !== 'undefined') {
+    raw = localStorage.getItem(key) || '{}'
+  }
+  const { hosts = [] } = JSON.parse(raw)
   return hosts
 }
 
