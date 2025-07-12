@@ -4,6 +4,7 @@
   "short_name": "customjs",
   "author": "xcv58",
   "minimum_chrome_version": "52.0.2743",
+  "version": "3.4.12",
   "icons": {
     "128": "icon-128.png",
     "48": "icon-48.png",
