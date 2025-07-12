@@ -34,7 +34,7 @@
     "default_popup": "popup.html"
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self' https://*.googleapis.com https://gitcdn.link https://cdnjs.cloudflare.com; object-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'self'"
   },
   "permissions": ["storage", "tabs"],
   "host_permissions": ["http://*/", "https://*/"]
