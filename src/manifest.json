@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Custom JavaScript for Websites 2",
   "short_name": "customjs",
   "author": "xcv58",
@@ -13,8 +13,7 @@
     "16": "icon-16.png"
   },
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -23,11 +22,19 @@
       "matches": ["\u003Call_urls>"]
     }
   ],
-  "web_accessible_resources": ["*.css", "base.js"],
-  "browser_action": {
+  "web_accessible_resources": [
+    {
+      "resources": ["*.css", "base.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": {
     "default_icon": "icon-48.png",
     "default_popup": "popup.html"
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://*.googleapis.com https://gitcdn.link https://cdnjs.cloudflare.com; object-src 'self'",
-  "permissions": ["storage", "http://*/", "https://*/", "tabs"]
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' https://*.googleapis.com https://gitcdn.link https://cdnjs.cloudflare.com; object-src 'self'"
+  },
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["http://*/", "https://*/"]
 }
