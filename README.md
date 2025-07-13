@@ -39,6 +39,17 @@ Thanks to:
 - Ace - http://ace.c9.io/
 - Pure - http://purecss.io/
 
+## Building and loading the extension
+
+Run `yarn install` once to install dependencies, then compile the extension
+with:
+
+```bash
+yarn build
+```
+
+Load the unpacked extension from the generated `build` folder instead of `src`.
+
 # base.js
 You can find `base.js` at `extension/lib/base.js`.
 It provides useful functions for you. You can directly use all functions in your
