@@ -59,7 +59,7 @@ const HtmlFiles = ['popup'].map(
 )
 
 const entry = Object.assign(
-  ...['popup', 'background', 'run', 'base'].map((name) => ({
+  ...['popup', 'background', 'base'].map((name) => ({
     [name]: path.join(__dirname, 'src', 'js', `${name}.tsx`)
   }))
 )
