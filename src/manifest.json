@@ -3,7 +3,8 @@
   "name": "Custom JavaScript for Websites 2",
   "short_name": "customjs",
   "author": "xcv58",
-  "minimum_chrome_version": "52.0.2743",
+  "version": "4.0.0",
+  "minimum_chrome_version": "120",
   "icons": {
     "128": "icon-128.png",
     "48": "icon-48.png",
