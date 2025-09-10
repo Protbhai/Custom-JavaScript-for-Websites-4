@@ -4,12 +4,95 @@ import {
   getHostKey,
   getActiveTab,
   getHosts,
-  setLastFocusedWindowId
+  setLastFocusedWindowId,
+  decodeSource
 } from 'libs'
 
 const getURL = ({ url }) => new URL(url)
 
 const reloadTab = (tab) => chrome.tabs.reload(tab.id)
+
+const LIB_BASE = 'https://ajax.googleapis.com/ajax/libs'
+
+const isValidURL = (url) => {
+  try {
+    const { protocol } = new URL(url)
+    return protocol === 'http:' || protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
+const fetchScript = async (url: string) => {
+  const res = await fetch(url)
+  if (!res.ok) {
+    throw new Error(`Fail to fetch ${url}: ${res.status}`)
+  }
+  return await res.text()
+}
+
+const buildJsArray = async (host, customjs) => {
+  const { config: { include, extra } = {}, source } = customjs
+  const js = [{ file: 'base.js' }]
+
+  if (include) {
+    const url = LIB_BASE + include
+    try {
+      js.push({ code: await fetchScript(url) })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const extras = (extra || '')
+    .split(';')
+    .map((x) => x.trim())
+    .filter(isValidURL)
+
+  for (const url of extras) {
+    try {
+      js.push({ code: await fetchScript(url) })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  let code = decodeSource(source)
+  if (typeof host === 'object' && host.isRegex) {
+    code = `if (new RegExp(${JSON.stringify(host.pattern)}).test(location.href)) {\n${code}\n}`
+  }
+  js.push({ code })
+  return js
+}
+
+const buildMatch = (host) => {
+  if (typeof host === 'string') {
+    return [`${host}/*`]
+  }
+  return ['<all_urls>']
+}
+
+const registerAllUserScripts = async () => {
+  const { hosts = [] } = await chrome.storage.sync.get({ hosts: [] })
+  const scripts = []
+
+  for (const host of hosts) {
+    const hostKey = getHostKey(host)
+    const data = await chrome.storage.sync.get(hostKey)
+    const customjs = data[hostKey]
+    if (!customjs || !customjs.config?.enable) {
+      continue
+    }
+    const js = await buildJsArray(host, customjs)
+    const matches = buildMatch(host)
+    scripts.push({ id: hostKey, matches, js, allFrames: true })
+  }
+
+  await chrome.userScripts.unregister()
+  if (scripts.length > 0) {
+    await chrome.userScripts.register(scripts)
+  }
+}
 
 const methodMap = {
   getData: async (message, { tab, url }, sendResponse) => {
@@ -83,8 +166,8 @@ chrome.runtime.onMessage.addListener((...args) => {
 })
 
 chrome.windows.onFocusChanged.addListener(onFocusChanged)
-
 chrome.runtime.onInstalled.addListener((details) => {
+  registerAllUserScripts()
   chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
     if (tabs.length <= 0) {
       return
@@ -92,4 +175,12 @@ chrome.runtime.onInstalled.addListener((details) => {
     const { windowId } = tabs[0]
     setLastFocusedWindowId(windowId)
   })
+})
+
+chrome.runtime.onStartup.addListener(registerAllUserScripts)
+
+chrome.storage.onChanged.addListener((_, area) => {
+  if (area === 'sync') {
+    registerAllUserScripts()
+  }
 })

@@ -1,7 +1,9 @@
 # Custom JavaScript for websites (Manifest v3)
 
 This repository now targets **Chrome extension manifest v3**. All original
-features are preserved while using the latest extension format.
+features are preserved while using the latest extension format. To run user
+scripts you must enable the **Allow user scripts** toggle on the extension's
+details page in Chrome 120 or later.
 
 [![CircleCI](https://circleci.com/gh/xcv58/Custom-JavaScript-for-Websites-2.svg?style=svg)](https://circleci.com/gh/xcv58/Custom-JavaScript-for-Websites-2)
 [![Build Status](https://travis-ci.org/xcv58/Custom-JavaScript-for-Websites-2.svg?branch=master)](https://travis-ci.org/xcv58/Custom-JavaScript-for-Websites-2)
